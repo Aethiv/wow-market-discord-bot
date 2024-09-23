@@ -18,14 +18,13 @@ async def get_item_price(ctx, item_name, token):
 
     print(matched_items_dict)
     
-    # Iterate over each matched item and check auction house
     for item_id, item_tier in matched_items_dict.items():
-        # Use item_name and item_tier for the Discord message
+
         await check_auction_house(ctx, item_id, item_name, item_tier, token)
     
 
 def get_realm_ID(realm_name,token):
-    pattern = r"connected-realm/(\d+)"  # Matches "connected-realm/" followed by one or more digits
+    pattern = r"connected-realm/(\d+)" 
 
     realm_api_url = f'https://eu.api.blizzard.com/data/wow/realm/{realm_name}?namespace=dynamic-eu&locale=en_US&access_token={token}'
     realm_response = requests.get(realm_api_url)
@@ -76,14 +75,12 @@ async def check_auction_house(ctx, item_id, item_name, item_tier, token):
             else:
                 print(f"Failed to retrieve or load auction data for realm ID: {realm_id}")
 
-    # Prepare message for lowest prices by realm
     if realm_lowest_prices:
         message = f"Item: {item_name} {EMOJI_MAP.get(item_tier, '<:amogus:1285386395275493376>')}\nLowest prices by realm:\n"
         for realm_name, lowest_price in realm_lowest_prices.items():
             message += f"Realm: {realm_name} | Lowest Price: {lowest_price / 10000}g\n"
         await ctx.send(message)
     
-    # Check the region-wide commodities auction house
     print(f"Checking region-wide commodities auction house for item ID: {item_id}")
     region_auction_data = await get_region_auction_data(ctx, token)
 
@@ -132,7 +129,7 @@ def get_item_tier(verified_items):
     item_tier_dict = {}
     for item in verified_items:
         item_id = item['wowhead']['item']['@id']
-        #xml from wowhead converted to json
+        # Xml from wowhead converted to json
         html_tooltip = item['wowhead']['item']['htmlTooltip']
 
         match = re.search(r'quality-tier(\d+)\.png', html_tooltip)
@@ -145,17 +142,3 @@ def get_item_tier(verified_items):
             item_tier_dict[item_id] = None
 
     return item_tier_dict
-
-
-
-
-
-
-
-
-
-#def get_item_price(item_id, token):
- #   item_info_url = f'https://eu.api.blizzard.com/data/wow/item/{item_id}?namespace=static-eu&access_token={token}'
-  #  item_info_response = requests.get(item_info_url)
-   # item_info = item_info_response.json()
-    #return item_info.get('vendor_price', 'Price not available')

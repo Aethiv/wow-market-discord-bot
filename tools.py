@@ -15,7 +15,6 @@ EMOJI_MAP = {
     "tier2": "<:tier2:1285359290932269077>",
     "tier3": "<:tier3:1285359300134305822>",
     "default": "<:amogus:1285386395275493376>"
-    # Add more emojis as needed
 }
 
 def xml_to_json(item_id):
@@ -63,7 +62,7 @@ def is_data_expired(file_path):
     return True
 
 async def get_realm_auction_data(ctx, realm_id, token):
-    file_path = f"{realm_id}_REALM_AUCTION_FILE"
+    file_path = f"{realm_id}_{REALM_AUCTION_FILE}"
     if is_data_expired(file_path):
         print("Downloading new realm auction data...")
         await ctx.send("Downloading new realm auction data...")
@@ -82,7 +81,7 @@ async def get_realm_auction_data(ctx, realm_id, token):
         auction_data = load_auction_data(file_path)
         if auction_data is None:
             print(f"Corrupted or invalid data in {file_path}. Redownloading...")
-            return get_realm_auction_data(ctx, realm_id, token)  # Redownload if corrupted
+            return get_realm_auction_data(ctx, realm_id, token)
         return auction_data
 
 async def get_region_auction_data(ctx, token):
@@ -105,7 +104,7 @@ async def get_region_auction_data(ctx, token):
         auction_data = load_auction_data(file_path)
         if auction_data is None:
             print(f"Corrupted or invalid data in {file_path}. Redownloading...")
-            return get_region_auction_data(ctx, token)  # Redownload if corrupted
+            return get_region_auction_data(ctx, token)
         return auction_data
 
 async def update_realm_file(ctx, realm_name, token):
@@ -135,6 +134,5 @@ async def update_realm_file(ctx, realm_name, token):
             await ctx.send(f"Added new realm '{realm_name}' with ID {new_realm}.")
         
     except Exception as e:
-        # Send error message to Discord
         await ctx.send(f"Failed to update realm data: {str(e)}")
-        raise  # Re-raise the exception to be caught by the bot
+        raise

@@ -5,11 +5,8 @@ import tools
 import requests
 from discord.ext import commands
 
-# Blizzard API URLs
 AUTH_URL = 'https://eu.battle.net/oauth/token'
 
-
-# Initialize Discord bot
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix='!', intents=intents)
@@ -37,11 +34,11 @@ async def price(ctx, *, item_name):
 async def addrealm(ctx, *, realm_name):
     token = get_access_token()
     try:
-        # Call the function and pass the context
+
         await tools.update_realm_file(ctx, realm_name.lower(), token)
         print('Done')
     except Exception as e:
-        # Send error message to Discord
+        
         await ctx.send(f"An error occurred: {str(e)}")
 
 bot.run(BOT_TOKEN)
